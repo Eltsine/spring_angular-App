@@ -1,0 +1,149 @@
+package com.example.boris.demo;
+
+import com.example.boris.demo.entities.Categorie;
+import com.example.boris.demo.entities.Produit;
+import com.example.boris.demo.repository.ProduitRepository;
+import com.example.boris.demo.services.ProduitService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+
+import java.util.Date;
+import java.util.List;
+
+@SpringBootTest
+class ProduitsApplicationTests {
+
+    @Autowired
+    private ProduitRepository produitRepository;
+
+    @Autowired
+    private ProduitService produitService;
+
+    @Test
+    public void testCreateProduit() {
+        Produit prod = new Produit("Lenovo",500.25,new Date());
+        produitRepository.save(prod);
+    }
+
+    @Test
+    public void testFindProduit(){
+        Produit p = produitRepository.findById(4L).get();
+        System.out.println(p);
+    }
+    @Test
+    public void testFindProduitByNom(){
+        List<Produit> prods = produitRepository.findByNomProduit("PC Dell");
+        for (Produit p:prods){
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testFindProduitByNomContains(){
+        List<Produit> prods = produitRepository.findByNomProduitContains("U");
+        for (Produit p:prods){
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testfindByNomPrix()
+    {
+        List<Produit> prods = produitRepository.findByNomPrix("PC Dell", 2000.0);
+        for (Produit p : prods)
+        {
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testfindByCategorie()
+    {
+        Categorie cat = new Categorie();
+        cat.setIdCat(1L);
+        List<Produit> prods = produitRepository.findByCategorie(cat);
+        for (Produit p : prods)
+        {
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void findByCategorieIdCat()
+    {
+        List<Produit> prods = produitRepository.findByCategorieIdCat(1L);
+        for (Produit p : prods)
+        {
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testfindByOrderByNomProduitAsc()
+    {
+        List<Produit> prods =
+                produitRepository.findByOrderByNomProduitAsc();
+        for (Produit p : prods)
+        {
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testTrierProduitsNomsPrix()
+    {
+        List<Produit> prods = produitRepository.trierProduitsNomsPrix();
+        for (Produit p : prods)
+        {
+            System.out.println(p);
+        }
+    }
+
+
+
+
+
+    @Test
+    public void testUpdateProduit(){
+        Produit p = produitRepository.findById(6L).get();
+        p.setPrixProduit(2000.0);
+        p.setNomProduit("HP");
+        produitRepository.save(p);
+        System.out.println(p);
+    }
+
+    @Test
+    public void testDeleteProduit(){
+        produitRepository.deleteById(4L);
+
+    }
+
+    @Test
+    public void testFindAllProduit(){
+        List<Produit> prods = produitRepository.findAll();
+        for (Produit p:prods){
+            System.out.println(p);
+        }
+    }
+
+    @Test
+    public void testFindByNomProduitContains()
+    {
+        Page<Produit> prods = produitService.getAllProduitsParPage(0,2);
+        System.out.println(prods.getSize());
+        System.out.println(prods.getTotalElements());
+        System.out.println(prods.getTotalPages());
+        prods.getContent().forEach(p -> {System.out.println(p.toString());
+        });
+        /*ou bien
+        for (Produit p : prods)
+        {
+        System.out.println(p);
+        } */
+    }
+
+
+
+}
